@@ -42,5 +42,23 @@ cvmfs_run_test() {
   check_repository $CVMFS_TEST_REPO -i || return 40
   cat /cvmfs/$CVMFS_TEST_REPO/foo/new/x /cvmfs/$CVMFS_TEST_REPO/foo/new/y || return 41
 
+  echo "*** create template into an existing directory"
+  echo "*** open regular transaction"
+  start_transaction $CVMFS_TEST_REPO || return 50
+  echo "*** create new directories"
+  mkdir -p /cvmfs/$CVMFS_TEST_REPO/test/foo || return 51
+  mkdir -p /cvmfs/$CVMFS_TEST_REPO/test/bar || return 52
+  echo "x" > /cvmfs/$CVMFS_TEST_REPO/test/foo/x || return 53
+  echo "hello" > /cvmfs/$CVMFS_TEST_REPO/test/foo/hello || return 54
+  echo "publish transaction"
+  publish_repo $CVMFS_TEST_REPO || return 55
+
+  echo "*** create template transaction on an existing directory"
+  start_transaction $CVMFS_TEST_REPO -T /test/foo=/test/bar
+  echo "*** create new valid template transaction"
+  start_transaction $CVMFS_TEST_REPO -T /test/foo=/test/bar/foo || return 61
+  $ echo "*** abort current transaction"
+  $ cvmfs_server abort -f $CVMFS_TEST_REPO
+
   return 0
 }
