@@ -11,7 +11,6 @@
 
 #include "logging.h"
 #include "publish/cmd_commit.h"
-#include "publish/cmd_transaction.h"
 #include "publish/cmd_diff.h"
 #include "publish/cmd_enter.h"
 #include "publish/cmd_hash.h"
